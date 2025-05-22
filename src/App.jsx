@@ -1,23 +1,40 @@
-import React from 'react';
-import { ThemeProvider } from './contexts/ThemeContext';
-import ThemeToggle from './components/ThemeToggle';
+import React, { useState } from "react";
+import ModeSelect from "./components/ModeSelect";
+import RulesModal from "./components/RulesModal";
+import "./styles/ModeSelect.css";
+import "./styles/RulesModal.css";
 
-function App() {
+export default function App() {
+  const [mode, setMode] = useState(null); // 'single' | 'multi' | null
+  const [showRules, setShowRules] = useState(false);
+
+  function handleSelectMode(selectedMode) {
+    setMode(selectedMode);
+  }
+
+  function handleShowRules() {
+    setShowRules(true);
+  }
+
+  function handleCloseRules() {
+    setShowRules(false);
+  }
+
+  if (!mode) {
+    // Show mode select screen first
+    return (
+      <>
+        <ModeSelect onSelectMode={handleSelectMode} onShowRules={handleShowRules} />
+        <RulesModal isOpen={showRules} onClose={handleCloseRules} />
+      </>
+    );
+  }
+
+  // Placeholder for next screens (setup or game)
   return (
-    <ThemeProvider>
-      <div className="app-container">
-        <header>
-          <h1>Blink Tac Toe</h1>
-          <ThemeToggle />
-        </header>
-
-        {/* Placeholder for future components like ModeSelect, Board etc. */}
-        <main>
-          <p>Welcome to Blink Tac Toe! Choose a mode to start playing.</p>
-        </main>
-      </div>
-    </ThemeProvider>
+    <div style={{ padding: "2rem", textAlign: "center" }}>
+      <h2>{mode === "single" ? "Single Player Mode" : "Multiplayer Mode"}</h2>
+      <button onClick={() => setMode(null)}>Back to Mode Select</button>
+    </div>
   );
 }
-
-export default App;

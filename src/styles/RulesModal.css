@@ -1,0 +1,34 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .rules-modal {
+    background: white;
+    padding: 2rem;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  
+  .rules-modal h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .rules-modal ul {
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
+  
+  .rules-modal button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
