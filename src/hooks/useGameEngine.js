@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { checkWin } from '../utils/gameHelpers';
 import { getRandomEmojiFromCategory } from '../utils/emojiCategories';
+import { getRandomAIMove } from '../utils/aiLogic'; // ✅
 
-export const useGameEngine = (playerCategories) => {
+export const useGameEngine = (playerCategories, isSinglePlayer = false) => {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [turn, setTurn] = useState('player1');
   const [winner, setWinner] = useState(null);
@@ -11,36 +12,48 @@ export const useGameEngine = (playerCategories) => {
 
   const currentPlayer = turn;
 
-  const placeEmoji = (index) => {
-    if (winner || board[index]) return;
-    if (bannedCells[currentPlayer].has(index)) return;
+  const placeEmoji = (index, customPlayer = null) => {
+    const player = customPlayer || currentPlayer;
+    if (winner || board[index] || bannedCells[player].has(index)) return;
 
-    const emoji = getRandomEmojiFromCategory(playerCategories[currentPlayer]);
+    const emoji = getRandomEmojiFromCategory(playerCategories[player]);
     const updatedBoard = [...board];
-    updatedBoard[index] = { player: currentPlayer, emoji };
+    updatedBoard[index] = { player, emoji };
     setBoard(updatedBoard);
 
-    const newStack = [...emojiStacks[currentPlayer], index];
-
+    const newStack = [...emojiStacks[player], index];
     if (newStack.length > 3) {
       const [removed, ...rest] = newStack;
       updatedBoard[removed] = null;
       setBannedCells((prev) => ({
         ...prev,
-        [currentPlayer]: new Set(prev[currentPlayer]).add(removed),
+        [player]: new Set(prev[player]).add(removed),
       }));
-      setEmojiStacks((prev) => ({ ...prev, [currentPlayer]: [...rest, index] }));
-      setBoard([...updatedBoard]);
+      setEmojiStacks((prev) => ({ ...prev, [player]: [...rest, index] }));
     } else {
-      setEmojiStacks((prev) => ({ ...prev, [currentPlayer]: newStack }));
+      setEmojiStacks((prev) => ({ ...prev, [player]: newStack }));
     }
 
-    if (checkWin(updatedBoard, currentPlayer)) {
-      setWinner(currentPlayer);
+    if (checkWin(updatedBoard, player)) {
+      setWinner(player);
     } else {
-      setTurn(turn === 'player1' ? 'player2' : 'player1');
+      if (!customPlayer) {
+        setTurn(player === 'player1' ? 'player2' : 'player1');
+      }
     }
   };
+
+  // ✅ AI MOVE TRIGGER
+  useEffect(() => {
+    if (isSinglePlayer && turn === 'player2' && !winner) {
+      const timeout = setTimeout(() => {
+        const aiMove = getRandomAIMove(board, bannedCells.player2);
+        if (aiMove !== null) placeEmoji(aiMove, 'player2');
+        setTurn('player1');
+      }, 600); // short delay for realism
+      return () => clearTimeout(timeout);
+    }
+  }, [turn, board, winner, isSinglePlayer]);
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
