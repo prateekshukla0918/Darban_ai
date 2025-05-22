@@ -1,16 +1,12 @@
-import React from "react";
-import "../styles/ModeSelect.css";
+// ModeSelect.jsx
+import React from 'react';
 
-
-export default function ModeSelect({ onSelectMode, onShowRules }) {
+export default function ModeSelect({ onSelect }) {
   return (
-    <div className="mode-select-container">
-      <h1>Blink Tac Toe</h1>
-      <button onClick={() => onSelectMode("single")}>Single Player</button>
-      <button onClick={() => onSelectMode("multi")}>Multiplayer</button>
-      <button className="rules-button" onClick={onShowRules}>
-        Show Rules
-      </button>
+    <div className="mode-select">
+      <h2>Choose Game Mode</h2>
+      <button onClick={() => onSelect('single')}>Single Player</button>
+      <button onClick={() => onSelect('multi')}>Multiplayer</button>
     </div>
   );
 }
