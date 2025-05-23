@@ -1,16 +1,56 @@
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 80px);
-  grid-gap: 5px;
-  margin-top: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 300px;
 }
+
 .cell {
-  width: 80px;
-  height: 80px;
-  background: #f2f2f2;
+  aspect-ratio: 1 / 1;
+  background: var(--cell-bg);
+  border-radius: 10px;
   font-size: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.cell:hover {
+  transform: scale(1.05);
+}
+
+.cell:active {
+  transform: scale(0.95);
+}
+
+.cell {
+  width: 80px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cell.winning {
+  background-color: #ffe066;
+}
+
+.emoji.animate-in {
+  animation: popIn 0.25s ease-in;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
