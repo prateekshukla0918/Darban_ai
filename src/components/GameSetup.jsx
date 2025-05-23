@@ -3,7 +3,7 @@ import ModeSelect from './ModeSelect';
 import EmojiSelector from './EmojiSelector';
 import { Volume2, VolumeX, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
-import { useSound } from '../contexts/SoundContext';
+import { useSoundContext } from '../contexts/SoundContext';  // useSoundContext here
 import RulesModal from './RulesModal';
 import '../styles/GameSetup.css';
 
@@ -16,7 +16,7 @@ const GameSetup = ({ onStartGame }) => {
   const [showRules, setShowRules] = useState(false);
   
   const { theme, toggleTheme } = useTheme();
-  const { soundEnabled, toggleSound, playSelectSound } = useSound();
+  const { soundEnabled, toggleSound, playSelectSound } = useSoundContext();
 
   const handleStartGame = () => {
     if (playerOneCategory && (gameMode === 'single' || playerTwoCategory)) {

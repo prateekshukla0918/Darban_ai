@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import PlayerInfo from './PlayerInfo';
 import Leaderboard from './Leaderboard';
-import { useSound } from '../contexts/SoundContext';
+import { useSoundContext } from '../contexts/SoundContext';  // useSoundContext here
 import { useGame } from '../contexts/GameContext';
 import { checkWinner, makeAIMove } from '../utils/gameHelpers';
 import { emojiCategories } from '../utils/emojiCategories';
@@ -24,11 +24,22 @@ const Game = ({
   const [gameOver, setGameOver] = useState(false);
   const [matchWinner, setMatchWinner] = useState(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  
-  const { playPlaceSound, playWinSound } = useSound();
+
+  const {
+    playPlaceSound,
+    playWinSound,
+    playResetSound,
+    playStartSound,
+    playDrawSound,
+    playToggleSound
+  } = useSoundContext();
+
   const { updateLeaderboard } = useGame();
-  
   const WINNING_SCORE = 5;
+
+  useEffect(() => {
+    playStartSound();
+  }, []);
 
   useEffect(() => {
     if (gameMode === 'single' && !isPlayerOneTurn && !gameOver) {
@@ -38,7 +49,7 @@ const Game = ({
           handleCellClick(aiMove);
         }
       }, 750);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isPlayerOneTurn, gameMode, gameOver]);
@@ -47,20 +58,18 @@ const Game = ({
     if (board[index] !== null || gameOver) return;
 
     playPlaceSound();
-    
+
     const newBoard = [...board];
-    
     const isP1 = isPlayerOneTurn;
     const category = isP1 ? playerOneCategory : playerTwoCategory;
     const emojis = emojiCategories[category]?.emojis || [];
-    
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-    
+
     newBoard[index] = {
       emoji: randomEmoji,
       player: isP1 ? 1 : 2
     };
-    
+
     if (isP1) {
       const newMoves = [...playerOneMoves, index];
       if (newMoves.length > 3) {
@@ -74,15 +83,15 @@ const Game = ({
       }
       setPlayerTwoMoves(newMoves);
     }
-    
+
     setBoard(newBoard);
-    
+
     const result = checkWinner(newBoard);
     if (result) {
       playWinSound();
       setWinningLine(result.line);
       setGameOver(true);
-      
+
       if (isP1) {
         setPlayerOneScore(prev => prev + 1);
         if (playerOneScore + 1 >= WINNING_SCORE) {
@@ -96,7 +105,7 @@ const Game = ({
           updateLeaderboard(gameMode === 'single' ? 'AI' : 'Player 2');
         }
       }
-      
+
       setTimeout(() => {
         if (playerOneScore + 1 < WINNING_SCORE && playerTwoScore + 1 < WINNING_SCORE) {
           resetRound();
@@ -108,6 +117,7 @@ const Game = ({
   };
 
   const resetRound = () => {
+    playResetSound();
     setBoard(Array(9).fill(null));
     setPlayerOneMoves([]);
     setPlayerTwoMoves([]);
@@ -130,19 +140,25 @@ const Game = ({
         <div className="game-actions">
           <button 
             className="action-button"
-            onClick={() => setShowLeaderboard(!showLeaderboard)}
+            onClick={() => {
+              playToggleSound();
+              setShowLeaderboard(!showLeaderboard);
+            }}
           >
             {showLeaderboard ? 'Hide Leaderboard' : 'Show Leaderboard'}
           </button>
           <button 
             className="action-button"
-            onClick={onResetGame}
+            onClick={() => {
+              playResetSound();
+              onResetGame();
+            }}
           >
             New Game
           </button>
         </div>
       </div>
-      
+
       {showLeaderboard ? (
         <Leaderboard onClose={() => setShowLeaderboard(false)} />
       ) : (
@@ -152,46 +168,28 @@ const Game = ({
               player={1}
               score={playerOneScore}
               isActive={isPlayerOneTurn && !gameOver}
-              category={emojiCategories[playerOneCategory]?.name || 'Unknown'}
-              categoryEmoji={emojiCategories[playerOneCategory]?.preview || '❓'}
+              category={playerOneCategory}
             />
-            <div className="score-display">
-              <span>{playerOneScore}</span>
-              <span>-</span>
-              <span>{playerTwoScore}</span>
-            </div>
             <PlayerInfo 
-              player={2}
+              player={gameMode === 'single' ? 'AI' : 2}
               score={playerTwoScore}
               isActive={!isPlayerOneTurn && !gameOver}
-              category={emojiCategories[playerTwoCategory]?.name || 'Unknown'}
-              categoryEmoji={emojiCategories[playerTwoCategory]?.preview || '❓'}
-              isAI={gameMode === 'single'}
+              category={playerTwoCategory}
             />
           </div>
-          
-          <Board 
-            board={board} 
-            onCellClick={handleCellClick}
-            winningLine={winningLine}
-          />
-          
-          {matchWinner && (
-            <div className="match-result">
+
+          {matchWinner ? (
+            <div className="match-winner">
               <h2>{matchWinner} wins the match!</h2>
-              <button 
-                className="new-match-button"
-                onClick={startNewMatch}
-              >
-                Start New Match
-              </button>
+              <button onClick={startNewMatch}>Start New Match</button>
             </div>
+          ) : (
+            <Board 
+              board={board}
+              onCellClick={handleCellClick}
+              winningLine={winningLine}
+            />
           )}
-          
-          <div className="game-rules-reminder">
-            <p>Remember: You can only have 3 emojis on the board at once!</p>
-            <p>First to {WINNING_SCORE} wins takes the match.</p>
-          </div>
         </>
       )}
     </div>

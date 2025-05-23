@@ -1,18 +1,26 @@
 import React from 'react';
+import { useSoundContext } from '../contexts/SoundContext';  // useSoundContext here
 import '../styles/Cell.css';
 
-const Cell = ({ value, onClick, isWinningCell }) => {
+const Cell = ({ value, onClick, isWinning }) => {
+  const { playClickSound } = useSoundContext();
+
+  const handleClick = () => {
+    playClickSound();
+    onClick();
+  };
+
   return (
-    <button 
-      className={`game-cell ${isWinningCell ? 'winning' : ''} ${value ? `player-${value.player}` : ''}`}
-      onClick={onClick}
-      aria-label={value ? `Cell with ${value.emoji}` : "Empty cell"}
+    <button
+      className={`cell ${isWinning ? 'winning-cell' : ''}`}
+      onClick={handleClick}
+      disabled={!!value}
+      aria-label={value?.emoji ? `Cell with ${value.emoji}` : 'Empty cell'}
     >
-      {value && (
-        <span className="cell-emoji">{value.emoji}</span>
-      )}
+      {value?.emoji || ''}
     </button>
   );
 };
 
 export default Cell;
+

@@ -1,79 +1,68 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
-const SoundContext = createContext(undefined);
+const SoundContext = createContext();
 
 export const SoundProvider = ({ children }) => {
-  const [soundEnabled, setSoundEnabled] = useState(() => {
-    const savedSoundPreference = localStorage.getItem('soundEnabled');
-    return savedSoundPreference ? savedSoundPreference === 'true' : true;
-  });
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const [placeSound, setPlaceSound] = useState(null);
-  const [winSound, setWinSound] = useState(null);
-  const [selectSound, setSelectSound] = useState(null);
-
-  useEffect(() => {
-    const place = new Audio('/sounds/place.mp3');
-    const win = new Audio('/sounds/win.mp3');
-    const select = new Audio('/sounds/select.mp3');
-
-    setPlaceSound(place);
-    setWinSound(win);
-    setSelectSound(select);
-
-    return () => {
-      place.pause();
-      win.pause();
-      select.pause();
-    };
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('soundEnabled', soundEnabled.toString());
+  // Play sound utility
+  const playSound = useCallback((url) => {
+    if (!soundEnabled) return;
+    const audio = new Audio(url);
+    audio.play();
   }, [soundEnabled]);
 
   const toggleSound = () => {
     setSoundEnabled(prev => !prev);
   };
 
-  const playPlaceSound = () => {
-    if (soundEnabled && placeSound) {
-      placeSound.currentTime = 0;
-      placeSound.play().catch(e => console.log('Error playing sound:', e));
-    }
+  // You should have these sound files in /src/assets/sounds/
+  const sounds = {
+    click: '/src/assets/sounds/click.mp3',
+    place: '/src/assets/sounds/place.mp3',
+    win: '/src/assets/sounds/win.mp3',
+    reset: '/src/assets/sounds/reset.mp3',
+    start: '/src/assets/sounds/start.mp3',
+    draw: '/src/assets/sounds/draw.mp3',
+    toggle: '/src/assets/sounds/toggle.mp3',
+    select: '/src/assets/sounds/select.mp3',
+    error: '/src/assets/sounds/error.mp3',
   };
 
-  const playWinSound = () => {
-    if (soundEnabled && winSound) {
-      winSound.currentTime = 0;
-      winSound.play().catch(e => console.log('Error playing sound:', e));
-    }
-  };
-
-  const playSelectSound = () => {
-    if (soundEnabled && selectSound) {
-      selectSound.currentTime = 0;
-      selectSound.play().catch(e => console.log('Error playing sound:', e));
-    }
-  };
+  // Define play functions for each sound effect
+  const playClickSound = () => playSound(sounds.click);
+  const playPlaceSound = () => playSound(sounds.place);
+  const playWinSound = () => playSound(sounds.win);
+  const playResetSound = () => playSound(sounds.reset);
+  const playStartSound = () => playSound(sounds.start);
+  const playDrawSound = () => playSound(sounds.draw);
+  const playToggleSound = () => playSound(sounds.toggle);
+  const playSelectSound = () => playSound(sounds.select);
+  const playErrorSound = () => playSound(sounds.error);
 
   return (
     <SoundContext.Provider value={{
       soundEnabled,
       toggleSound,
+      playClickSound,
       playPlaceSound,
       playWinSound,
-      playSelectSound
+      playResetSound,
+      playStartSound,
+      playDrawSound,
+      playToggleSound,
+      playSelectSound,
+      playErrorSound
     }}>
       {children}
     </SoundContext.Provider>
   );
 };
 
-export const useSound = () => {
+export const useSoundContext = () => {
   const context = useContext(SoundContext);
-  if (context === undefined) {
-    throw new Error('useSound must be used within a SoundProvider');
+  if (!context) {
+    throw new Error('useSoundContext must be used within a SoundProvider');
   }
   return context;
 };
