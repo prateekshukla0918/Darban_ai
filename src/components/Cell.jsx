@@ -1,25 +1,18 @@
-// src/components/Cell.jsx
-import { useEffect, useRef } from "react";
-import { useSound } from "../contexts/SoundContext";
-import moveSound from "../assets/sounds/move.mp3";
+import React from 'react';
+import '../styles/Cell.css';
 
-export default function Cell({ value, onClick, isWinning }) {
-  const { soundOn } = useSound();
-  const audioRef = useRef(null);
-
-  useEffect(() => {
-    if (value && soundOn) {
-      audioRef.current?.play();
-    }
-  }, [value, soundOn]);
-
+const Cell = ({ value, onClick, isWinningCell }) => {
   return (
-    <div
-      className={`cell ${isWinning ? "winning" : ""}`}
+    <button 
+      className={`game-cell ${isWinningCell ? 'winning' : ''} ${value ? `player-${value.player}` : ''}`}
       onClick={onClick}
+      aria-label={value ? `Cell with ${value.emoji}` : "Empty cell"}
     >
-      <span className={`emoji ${value ? "animate-in" : ""}`}>{value}</span>
-      <audio ref={audioRef} src={moveSound} preload="auto" />
-    </div>
+      {value && (
+        <span className="cell-emoji">{value.emoji}</span>
+      )}
+    </button>
   );
-}
+};
+
+export default Cell;

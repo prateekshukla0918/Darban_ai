@@ -1,0 +1,139 @@
+.leaderboard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 2);
+  }
+  
+  .leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--spacing-unit) * 1);
+  }
+  
+  .leaderboard-header h2 {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    color: var(--primary-color);
+  }
+  
+  .close-button {
+    background: none;
+    color: var(--text-secondary);
+    padding: calc(var(--spacing-unit) * 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .close-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+  }
+  
+  .leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 1);
+  }
+  
+  .leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    padding: calc(var(--spacing-unit) * 1.5);
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    animation: slide-in 0.3s ease;
+    animation-fill-mode: both;
+  }
+  
+  .leaderboard-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  
+  .leaderboard-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .leaderboard-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  
+  .player-rank {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  .leaderboard-item:nth-child(1) .player-rank {
+    background-color: gold;
+    color: black;
+  }
+  
+  .leaderboard-item:nth-child(2) .player-rank {
+    background-color: silver;
+    color: black;
+  }
+  
+  .leaderboard-item:nth-child(3) .player-rank {
+    background-color: #cd7f32; /* Bronze */
+  }
+  
+  .player-name {
+    flex: 1;
+    font-weight: 500;
+  }
+  
+  .player-wins {
+    font-weight: 600;
+    color: var(--accent-color);
+  }
+  
+  .reset-leaderboard-button {
+    background-color: var(--error-color);
+    color: white;
+    padding: calc(var(--spacing-unit) * 1.5);
+    border-radius: var(--border-radius);
+    margin-top: calc(var(--spacing-unit) * 1);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+  }
+  
+  .reset-leaderboard-button:hover {
+    background-color: var(--error-color);
+    opacity: 0.9;
+  }
+  
+  .empty-leaderboard {
+    text-align: center;
+    padding: calc(var(--spacing-unit) * 4);
+    color: var(--text-secondary);
+  }
+  
+  .empty-leaderboard p:first-child {
+    font-weight: 600;
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    font-size: 1.1rem;
+  }
+  
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

@@ -1,34 +1,102 @@
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.rules-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: calc(var(--spacing-unit) * 2);
+  animation: fade-in 0.3s ease;
+}
+
+.rules-modal {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: calc(var(--spacing-unit) * 3);
+  animation: slide-up 0.3s ease;
+}
+
+.rules-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(var(--spacing-unit) * 3);
+}
+
+.rules-header h2 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.rules-content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 3);
+}
+
+.rules-content section {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 1);
+}
+
+.rules-content h3 {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.rules-content p {
+  line-height: 1.5;
+  color: var(--text-color);
+}
+
+.rules-content ul {
+  margin-left: calc(var(--spacing-unit) * 2);
+}
+
+.rules-content li {
+  margin-bottom: calc(var(--spacing-unit) * 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
-  
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
   .rules-modal {
-    background: white;
-    padding: 2rem;
-    max-width: 400px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: calc(var(--spacing-unit) * 2);
   }
   
-  .rules-modal h2 {
-    margin-bottom: 1rem;
+  .rules-header h2 {
+    font-size: 1.3rem;
   }
   
-  .rules-modal ul {
-    text-align: left;
-    margin-bottom: 1.5rem;
+  .rules-content h3 {
+    font-size: 1.1rem;
   }
-  
-  .rules-modal button {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-  
+}

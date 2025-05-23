@@ -1,26 +1,65 @@
-.mode-select-container {
-    text-align: center;
-    padding: 2rem;
+.mode-select {
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.mode-select h2 {
+  font-size: 1.3rem;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  text-align: center;
+  color: var(--text-color);
+}
+
+.mode-options {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 2);
+}
+
+.mode-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--spacing-unit) * 2);
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.mode-option:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.mode-option.selected {
+  border-color: var(--accent-color);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.mode-option span {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: calc(var(--spacing-unit) * 1) 0;
+}
+
+.mode-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.mode-option.selected .mode-description {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .mode-options {
+    flex-direction: column;
   }
   
-  .mode-select-container h1 {
-    margin-bottom: 1.5rem;
+  .mode-option {
+    padding: calc(var(--spacing-unit) * 1.5);
   }
-  
-  .mode-select-container button {
-    margin: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  
-  .rules-button {
-    background-color: #eee;
-    color: #333;
-    border: none;
-    margin-top: 1rem;
-    font-size: 1rem;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  
+}

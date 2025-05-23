@@ -1,18 +1,25 @@
-import React from "react";
-import { emojiCategories } from "../utils/emojiCategories";
-import "../styles/PlayerInfo.css";
+import React from 'react';
+import '../styles/PlayerInfo.css';
 
-export default function PlayerInfo({ player, emojiCategory }) {
+const PlayerInfo = ({ 
+  player, 
+  score, 
+  isActive, 
+  category,
+  categoryEmoji,
+  isAI = false
+}) => {
   return (
-    <div className="player-info">
-      <h3>{player}</h3>
-      <div className="emoji-preview">
-        {emojiCategory
-          ? emojiCategories[emojiCategory].slice(0, 5).map((emoji, i) => (
-              <span key={i}>{emoji}</span>
-            ))
-          : "No selection"}
+    <div className={`player-info ${isActive ? 'active' : ''}`}>
+      <div className="player-avatar">
+        <span className="player-emoji">{categoryEmoji}</span>
+      </div>
+      <div className="player-details">
+        <h3>{isAI ? 'AI' : `Player ${player}`}</h3>
+        <p>{category}</p>
       </div>
     </div>
   );
-}
+};
+
+export default PlayerInfo;

@@ -1,0 +1,128 @@
+.game-setup {
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    padding: calc(var(--spacing-unit) * 3);
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 3);
+  }
+  
+  .game-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: calc(var(--spacing-unit) * 1);
+  }
+  
+  .game-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .setup-controls {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .control-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: calc(var(--spacing-unit) * 1);
+    border-radius: var(--border-radius);
+    transition: all var(--transition-fast);
+  }
+  
+  .control-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .rules-button {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 1);
+    font-weight: 500;
+    padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+  }
+  
+  .player-setup {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 3);
+    margin-top: calc(var(--spacing-unit) * 1);
+  }
+  
+  .player-config {
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .player-config label {
+    display: block;
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    font-weight: 500;
+  }
+  
+  .player-name-input {
+    width: 100%;
+    padding: calc(var(--spacing-unit) * 1.5);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    margin-bottom: calc(var(--spacing-unit) * 2);
+    background-color: var(--surface-color);
+    color: var(--text-color);
+  }
+  
+  .player-name-input:focus {
+    outline: 2px solid var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .start-game-button {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: calc(var(--spacing-unit) * 2);
+    border-radius: var(--border-radius);
+    margin-top: calc(var(--spacing-unit) * 2);
+    transition: all var(--transition-fast);
+  }
+  
+  .start-game-button:hover:not(.disabled) {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+  }
+  
+  .start-game-button:active:not(.disabled) {
+    transform: translateY(0);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .game-title {
+      font-size: 2rem;
+    }
+    
+    .game-subtitle {
+      font-size: 0.9rem;
+    }
+    
+    .player-config {
+      padding: calc(var(--spacing-unit) * 1.5);
+    }
+  }
