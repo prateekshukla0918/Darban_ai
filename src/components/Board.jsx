@@ -10,7 +10,7 @@ const Board = ({ board, onCellClick, winningLine }) => {
           key={index}
           value={cell}
           onClick={() => onCellClick(index)}
-          isWinningCell={winningLine?.includes(index) || false}
+          isWinning={winningLine?.includes(index) || false}
         />
       ))}
       

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSoundContext } from '../contexts/SoundContext';  // useSoundContext here
+import { useSoundContext } from '../contexts/SoundContext';
 import '../styles/Cell.css';
 
 const Cell = ({ value, onClick, isWinning }) => {
@@ -12,15 +12,16 @@ const Cell = ({ value, onClick, isWinning }) => {
 
   return (
     <button
-      className={`cell ${isWinning ? 'winning-cell' : ''}`}
+      className={`game-cell ${isWinning ? 'winning' : ''}`}
       onClick={handleClick}
       disabled={!!value}
       aria-label={value?.emoji ? `Cell with ${value.emoji}` : 'Empty cell'}
     >
-      {value?.emoji || ''}
+      <span className="cell-emoji">{value?.emoji || ''}</span>
     </button>
   );
 };
 
 export default Cell;
+
 
