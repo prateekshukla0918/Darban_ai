@@ -30,7 +30,7 @@ const PlayerInfo = ({
       <div className="player-details">
         <h3>{displayName}</h3>
         <p>{category}</p>
-        <p>Score: {score}</p>
+        
       </div>
     </div>
   );

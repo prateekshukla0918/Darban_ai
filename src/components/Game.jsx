@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Board from './Board';
-import PlayerInfo from './PlayerInfo';
-import Leaderboard from './Leaderboard';
-import { useSoundContext } from '../contexts/SoundContext';
-import { useGame } from '../contexts/GameContext';
-import { checkWinner, makeAIMove } from '../utils/gameHelpers';
-import { emojiCategories } from '../utils/emojiCategories';
-import '../styles/Game.css';
+import React, { useState, useEffect } from "react";
+import Board from "./Board";
+import PlayerInfo from "./PlayerInfo";
+import Leaderboard from "./Leaderboard";
+import { useSoundContext } from "../contexts/SoundContext";
+import { useGame } from "../contexts/GameContext";
+import { checkWinner, makeAIMove } from "../utils/gameHelpers";
+import { emojiCategories } from "../utils/emojiCategories";
+import "../styles/Game.css";
 
 const Game = ({
   gameMode,
@@ -14,7 +14,7 @@ const Game = ({
   playerTwoCategory,
   playerOneName,
   playerTwoName,
-  onResetGame
+  onResetGame,
 }) => {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [playerOneMoves, setPlayerOneMoves] = useState([]);
@@ -33,7 +33,7 @@ const Game = ({
     playResetSound,
     playStartSound,
     playDrawSound,
-    playToggleSound
+    playToggleSound,
   } = useSoundContext();
 
   const { updateLeaderboard } = useGame();
@@ -44,7 +44,7 @@ const Game = ({
   }, []);
 
   useEffect(() => {
-    if (gameMode === 'single' && !isPlayerOneTurn && !gameOver) {
+    if (gameMode === "single" && !isPlayerOneTurn && !gameOver) {
       const timer = setTimeout(() => {
         const aiMove = makeAIMove(board, playerTwoMoves);
         if (aiMove !== -1) {
@@ -68,7 +68,7 @@ const Game = ({
 
     newBoard[index] = {
       emoji: randomEmoji,
-      player: isP1 ? 1 : 2
+      player: isP1 ? 1 : 2,
     };
 
     if (isP1) {
@@ -93,7 +93,6 @@ const Game = ({
 
     setBoard(newBoard);
     // setPlayerOneMoves(newMoves);
-    
 
     const result = checkWinner(newBoard);
     if (result) {
@@ -102,27 +101,30 @@ const Game = ({
       setGameOver(true);
 
       if (isP1) {
-        setPlayerOneScore(prev => {
+        setPlayerOneScore((prev) => {
           const newScore = prev + 1;
           if (newScore >= WINNING_SCORE) {
-            setMatchWinner('Player 1');
-            updateLeaderboard('Player 1');
+            setMatchWinner("Player 1");
+            updateLeaderboard("Player 1");
           }
           return newScore;
         });
       } else {
-        setPlayerTwoScore(prev => {
+        setPlayerTwoScore((prev) => {
           const newScore = prev + 1;
           if (newScore >= WINNING_SCORE) {
-            setMatchWinner(gameMode === 'single' ? 'AI' : 'Player 2');
-            updateLeaderboard(gameMode === 'single' ? 'AI' : 'Player 2');
+            setMatchWinner(gameMode === "single" ? "AI" : "Player 2");
+            updateLeaderboard(gameMode === "single" ? "AI" : "Player 2");
           }
           return newScore;
         });
       }
 
       setTimeout(() => {
-        if (playerOneScore + 1 < WINNING_SCORE && playerTwoScore + 1 < WINNING_SCORE) {
+        if (
+          playerOneScore + 1 < WINNING_SCORE &&
+          playerTwoScore + 1 < WINNING_SCORE
+        ) {
           resetRound();
         }
       }, 2000);
@@ -154,12 +156,16 @@ const Game = ({
       setWinningLine(result.line);
       setGameOver(true);
 
-      setPlayerTwoScore(prev => {
+      setPlayerTwoScore((prev) => {
         const newScore = prev + 1;
         setTimeout(() => {
           if (newScore >= WINNING_SCORE) {
-            setMatchWinner(playerTwoName || (gameMode === 'single' ? 'Computer' : 'Player 2'));
-            updateLeaderboard(playerTwoName || (gameMode === 'single' ? 'Computer' : 'Player 2'));
+            setMatchWinner(
+              playerTwoName || (gameMode === "single" ? "Computer" : "Player 2")
+            );
+            updateLeaderboard(
+              playerTwoName || (gameMode === "single" ? "Computer" : "Player 2")
+            );
           } else {
             resetRound();
           }
@@ -193,17 +199,17 @@ const Game = ({
       <div className="game-header">
         <h1>Blink Tac Toe</h1>
         <div className="game-actions">
-          <button 
+          <button
             className="action-button"
             onClick={() => {
               playToggleSound();
               setShowLeaderboard(!showLeaderboard);
             }}
           >
-            {showLeaderboard ? 'Hide Leaderboard' : 'Show Leaderboard'}
+            {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
           </button>
-          <button 
-            className="action-button" 
+          <button
+            className="action-button"
             onClick={() => {
               playResetSound();
               onResetGame();
@@ -219,36 +225,67 @@ const Game = ({
       ) : (
         <>
           <div className="game-info">
-            <PlayerInfo 
+            <PlayerInfo
               player={1}
               score={playerOneScore}
               isActive={isPlayerOneTurn && !gameOver}
               category={playerOneCategory}
-              playerName={playerOneName || 'Player 1'}
+              playerName={playerOneName || "Player 1"}
             />
-            <PlayerInfo 
-              player={gameMode === 'single' ? 'AI' : 2}
+            <PlayerInfo
+              player={gameMode === "single" ? "AI" : 2}
               score={playerTwoScore}
               isActive={!isPlayerOneTurn && !gameOver}
               category={playerTwoCategory}
-              playerName={playerTwoName || (gameMode === 'single' ? 'Computer' : 'Player 2')}
-              isAI={gameMode === 'single'}
+              playerName={
+                playerTwoName ||
+                (gameMode === "single" ? "Computer" : "Player 2")
+              }
+              isAI={gameMode === "single"}
             />
           </div>
 
-          <Board 
-            board={board} 
-            onCellClick={handleCellClick} 
-            winningLine={winningLine} 
+          <Board
+            board={board}
+            onCellClick={handleCellClick}
+            winningLine={winningLine}
             gameOver={gameOver}
           />
 
           {matchWinner && (
             <div className="match-winner">
-              <h2>{matchWinner} wins the match!</h2>
-              <button className="action-button" onClick={startNewMatch}>
-                Play Again
-              </button>
+              <h2
+    style={{
+      fontSize: "1.5rem",
+      color: "#3b82f6",
+      fontWeight: "600",
+      marginBottom: "20px",
+      textShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
+      textAlign: "center",
+    }}
+  >
+    {matchWinner} wins the match!
+  </h2>
+
+
+  <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+    <button
+      onClick={startNewMatch}
+      style={{
+        backgroundColor: "#3b82f6",
+        color: "#fff",
+        fontSize: "1rem",
+        fontWeight: "500",
+        padding: "10px 24px",
+        border: "none",
+        borderRadius: "10px",
+        boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+        cursor: "pointer",
+      }}
+    >
+      Play Again
+    </button>
+  </div>
             </div>
           )}
         </>
