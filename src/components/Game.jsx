@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import PlayerInfo from './PlayerInfo';
 import Leaderboard from './Leaderboard';
-import { useSoundContext } from '../contexts/SoundContext';  // useSoundContext here
+import { useSoundContext } from '../contexts/SoundContext';
 import { useGame } from '../contexts/GameContext';
 import { checkWinner, makeAIMove } from '../utils/gameHelpers';
 import { emojiCategories } from '../utils/emojiCategories';
@@ -35,7 +35,7 @@ const Game = ({
   } = useSoundContext();
 
   const { updateLeaderboard } = useGame();
-  const WINNING_SCORE = 5;
+  const WINNING_SCORE = 1;
 
   useEffect(() => {
     playStartSound();
@@ -46,7 +46,7 @@ const Game = ({
       const timer = setTimeout(() => {
         const aiMove = makeAIMove(board, playerTwoMoves);
         if (aiMove !== -1) {
-          handleCellClick(aiMove);
+          handleAIMove(aiMove);
         }
       }, 750);
 
@@ -93,17 +93,23 @@ const Game = ({
       setGameOver(true);
 
       if (isP1) {
-        setPlayerOneScore(prev => prev + 1);
-        if (playerOneScore + 1 >= WINNING_SCORE) {
-          setMatchWinner('Player 1');
-          updateLeaderboard('Player 1');
-        }
+        setPlayerOneScore(prev => {
+          const newScore = prev + 1;
+          if (newScore >= WINNING_SCORE) {
+            setMatchWinner('Player 1');
+            updateLeaderboard('Player 1');
+          }
+          return newScore;
+        });
       } else {
-        setPlayerTwoScore(prev => prev + 1);
-        if (playerTwoScore + 1 >= WINNING_SCORE) {
-          setMatchWinner(gameMode === 'single' ? 'AI' : 'Player 2');
-          updateLeaderboard(gameMode === 'single' ? 'AI' : 'Player 2');
-        }
+        setPlayerTwoScore(prev => {
+          const newScore = prev + 1;
+          if (newScore >= WINNING_SCORE) {
+            setMatchWinner(gameMode === 'single' ? 'AI' : 'Player 2');
+            updateLeaderboard(gameMode === 'single' ? 'AI' : 'Player 2');
+          }
+          return newScore;
+        });
       }
 
       setTimeout(() => {
@@ -113,6 +119,52 @@ const Game = ({
       }, 2000);
     } else {
       setIsPlayerOneTurn(!isP1);
+    }
+  };
+
+  const handleAIMove = (index) => {
+    if (board[index] !== null || gameOver) return;
+
+    playPlaceSound();
+
+    const newBoard = [...board];
+    const emojis = emojiCategories[playerTwoCategory]?.emojis || [];
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+    newBoard[index] = {
+      emoji: randomEmoji,
+      player: 2
+    };
+
+    const newMoves = [...playerTwoMoves, index];
+    if (newMoves.length > 3) {
+      newBoard[newMoves.shift()] = null;
+    }
+    setPlayerTwoMoves(newMoves);
+    setBoard(newBoard);
+
+    const result = checkWinner(newBoard);
+    if (result) {
+      playWinSound();
+      setWinningLine(result.line);
+      setGameOver(true);
+
+      setPlayerTwoScore(prev => {
+        const newScore = prev + 1;
+        if (newScore >= WINNING_SCORE) {
+          setMatchWinner('AI');
+          updateLeaderboard('AI');
+        }
+        return newScore;
+      });
+
+      setTimeout(() => {
+        if (playerOneScore + 1 < WINNING_SCORE && playerTwoScore + 1 < WINNING_SCORE) {
+          resetRound();
+        }
+      }, 2000);
+    } else {
+      setIsPlayerOneTurn(true);
     }
   };
 

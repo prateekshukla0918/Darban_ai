@@ -13,7 +13,7 @@ const ModeSelect = ({ selectedMode, onSelectMode }) => {
         >
           <User size={24} />
           <span>Single Player</span>
-          <p className="mode-description">Play against AI</p>
+          <p className="mode-description">Play against Computer</p>
         </button>
         
         <button
