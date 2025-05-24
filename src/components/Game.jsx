@@ -12,6 +12,8 @@ const Game = ({
   gameMode,
   playerOneCategory,
   playerTwoCategory,
+  playerOneName,
+  playerTwoName,
   onResetGame
 }) => {
   const [board, setBoard] = useState(Array(9).fill(null));
@@ -58,7 +60,6 @@ const Game = ({
     if (board[index] !== null || gameOver) return;
 
     playPlaceSound();
-
     const newBoard = [...board];
     const isP1 = isPlayerOneTurn;
     const category = isP1 ? playerOneCategory : playerTwoCategory;
@@ -71,20 +72,28 @@ const Game = ({
     };
 
     if (isP1) {
-      const newMoves = [...playerOneMoves, index];
-      if (newMoves.length > 3) {
-        newBoard[newMoves.shift()] = null;
+      // Add current move index to player one's moves
+      const updatedPlayerOneMoves = [...playerOneMoves, index];
+      // If more than 3 moves, remove oldest player one's move from board
+      if (updatedPlayerOneMoves.length > 3) {
+        const oldestMoveIndex = updatedPlayerOneMoves.shift();
+        newBoard[oldestMoveIndex] = null;
       }
-      setPlayerOneMoves(newMoves);
+      setPlayerOneMoves(updatedPlayerOneMoves);
     } else {
-      const newMoves = [...playerTwoMoves, index];
-      if (newMoves.length > 3) {
-        newBoard[newMoves.shift()] = null;
+      // Add current move index to player two's moves
+      const updatedPlayerTwoMoves = [...playerTwoMoves, index];
+      // If more than 3 moves, remove oldest player two's move from board
+      if (updatedPlayerTwoMoves.length > 3) {
+        const oldestMoveIndex = updatedPlayerTwoMoves.shift();
+        newBoard[oldestMoveIndex] = null;
       }
-      setPlayerTwoMoves(newMoves);
+      setPlayerTwoMoves(updatedPlayerTwoMoves);
     }
 
     setBoard(newBoard);
+    // setPlayerOneMoves(newMoves);
+    
 
     const result = checkWinner(newBoard);
     if (result) {
@@ -126,22 +135,18 @@ const Game = ({
     if (board[index] !== null || gameOver) return;
 
     playPlaceSound();
-
     const newBoard = [...board];
     const emojis = emojiCategories[playerTwoCategory]?.emojis || [];
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 
-    newBoard[index] = {
-      emoji: randomEmoji,
-      player: 2
-    };
-
+    newBoard[index] = { emoji: randomEmoji, player: 2 };
     const newMoves = [...playerTwoMoves, index];
     if (newMoves.length > 3) {
       newBoard[newMoves.shift()] = null;
     }
-    setPlayerTwoMoves(newMoves);
+
     setBoard(newBoard);
+    setPlayerTwoMoves(newMoves);
 
     const result = checkWinner(newBoard);
     if (result) {
@@ -151,18 +156,16 @@ const Game = ({
 
       setPlayerTwoScore(prev => {
         const newScore = prev + 1;
-        if (newScore >= WINNING_SCORE) {
-          setMatchWinner('AI');
-          updateLeaderboard('AI');
-        }
+        setTimeout(() => {
+          if (newScore >= WINNING_SCORE) {
+            setMatchWinner(playerTwoName || (gameMode === 'single' ? 'Computer' : 'Player 2'));
+            updateLeaderboard(playerTwoName || (gameMode === 'single' ? 'Computer' : 'Player 2'));
+          } else {
+            resetRound();
+          }
+        }, 1800);
         return newScore;
       });
-
-      setTimeout(() => {
-        if (playerOneScore + 1 < WINNING_SCORE && playerTwoScore + 1 < WINNING_SCORE) {
-          resetRound();
-        }
-      }, 2000);
     } else {
       setIsPlayerOneTurn(true);
     }
@@ -200,13 +203,13 @@ const Game = ({
             {showLeaderboard ? 'Hide Leaderboard' : 'Show Leaderboard'}
           </button>
           <button 
-            className="action-button"
+            className="action-button" 
             onClick={() => {
               playResetSound();
               onResetGame();
             }}
           >
-            New Game
+            Quit
           </button>
         </div>
       </div>
@@ -221,26 +224,32 @@ const Game = ({
               score={playerOneScore}
               isActive={isPlayerOneTurn && !gameOver}
               category={playerOneCategory}
+              playerName={playerOneName || 'Player 1'}
             />
             <PlayerInfo 
               player={gameMode === 'single' ? 'AI' : 2}
               score={playerTwoScore}
               isActive={!isPlayerOneTurn && !gameOver}
               category={playerTwoCategory}
+              playerName={playerTwoName || (gameMode === 'single' ? 'Computer' : 'Player 2')}
+              isAI={gameMode === 'single'}
             />
           </div>
 
-          {matchWinner ? (
+          <Board 
+            board={board} 
+            onCellClick={handleCellClick} 
+            winningLine={winningLine} 
+            gameOver={gameOver}
+          />
+
+          {matchWinner && (
             <div className="match-winner">
               <h2>{matchWinner} wins the match!</h2>
-              <button onClick={startNewMatch}>Start New Match</button>
+              <button className="action-button" onClick={startNewMatch}>
+                Play Again
+              </button>
             </div>
-          ) : (
-            <Board 
-              board={board}
-              onCellClick={handleCellClick}
-              winningLine={winningLine}
-            />
           )}
         </>
       )}

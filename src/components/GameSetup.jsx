@@ -5,7 +5,7 @@ import { Volume2, VolumeX, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSoundContext } from '../contexts/SoundContext';
 import RulesModal from './RulesModal';
-import { emojiCategories } from '../utils/emojiCategories'; // ✅ Import categories
+import { emojiCategories } from '../utils/emojiCategories'; 
 import '../styles/GameSetup.css';
 
 const GameSetup = ({ onStartGame }) => {
@@ -19,7 +19,6 @@ const GameSetup = ({ onStartGame }) => {
   const { theme, toggleTheme } = useTheme();
   const { soundEnabled, toggleSound, playSelectSound } = useSoundContext();
 
-  // ✅ Helper to get a random emoji category
   const getRandomCategory = () => {
     const keys = Object.keys(emojiCategories);
     return keys[Math.floor(Math.random() * keys.length)];
@@ -30,7 +29,13 @@ const GameSetup = ({ onStartGame }) => {
       playSelectSound();
       const categoryForPlayerTwo =
         gameMode === 'single' ? getRandomCategory() : playerTwoCategory;
-      onStartGame(gameMode, playerOneCategory, categoryForPlayerTwo);
+      onStartGame(
+        gameMode,
+        playerOneCategory,
+        categoryForPlayerTwo,
+        playerOneName.trim(),
+        gameMode === 'single' ? 'Computer' : playerTwoName.trim()
+      );
     }
   };
 
@@ -90,6 +95,7 @@ const GameSetup = ({ onStartGame }) => {
             value={playerOneName}
             onChange={(e) => setPlayerOneName(e.target.value)}
             className="player-name-input"
+            placeholder="Player 1"
           />
           <EmojiSelector
             onSelectCategory={(category) => handleCategorySelect(category, 'p1')}
@@ -106,6 +112,7 @@ const GameSetup = ({ onStartGame }) => {
               value={playerTwoName}
               onChange={(e) => setPlayerTwoName(e.target.value)}
               className="player-name-input"
+              placeholder="Player 2"
             />
             <EmojiSelector
               onSelectCategory={(category) => handleCategorySelect(category, 'p2')}

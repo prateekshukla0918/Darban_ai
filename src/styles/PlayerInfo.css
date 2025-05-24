@@ -14,7 +14,7 @@
   animation: pulse-subtle 1.5s infinite;
 }
 
-.player-avatar {
+.player-avatar img {
   display: flex;
   align-items: center;
   justify-content: center;
