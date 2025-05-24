@@ -32,13 +32,13 @@ const RulesModal = ({ onClose }) => {
           
           <section>
             <h3>🏆 Scoring</h3>
-            <p>Each round win earns you 1 point. First player to reach 5 points wins the match.</p>
+            <p>Each round win earns you 1 point. This wins the match.</p>
           </section>
           
           <section>
             <h3>👤 Game Modes</h3>
             <ul>
-              <li><strong>Single Player:</strong> Play against the AI</li>
+              <li><strong>Single Player:</strong> Play against the Computer</li>
               <li><strong>Two Player:</strong> Play against a friend</li>
             </ul>
           </section>

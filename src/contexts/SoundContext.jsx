@@ -16,20 +16,20 @@ export const SoundProvider = ({ children }) => {
     setSoundEnabled(prev => !prev);
   };
 
-  // You should have these sound files in /src/assets/sounds/
+  // Public sound file paths
   const sounds = {
-    click: '/src/assets/sounds/click.mp3',
-    place: '/src/assets/sounds/place.mp3',
-    win: '/src/assets/sounds/win.mp3',
-    reset: '/src/assets/sounds/reset.mp3',
-    start: '/src/assets/sounds/start.mp3',
-    draw: '/src/assets/sounds/draw.mp3',
-    toggle: '/src/assets/sounds/toggle.mp3',
-    select: '/src/assets/sounds/select.mp3',
-    error: '/src/assets/sounds/error.mp3',
+    click: '/sounds/click.mp3',
+    place: '/sounds/place.mp3',
+    win: '/sounds/win.mp3',
+    reset: '/sounds/reset.mp3',
+    start: '/sounds/start.mp3',
+    draw: '/sounds/draw.mp3',
+    toggle: '/sounds/toggle.mp3',
+    select: '/sounds/select.mp3',
+    error: '/sounds/error.mp3',
   };
 
-  // Define play functions for each sound effect
+  // Define play functions
   const playClickSound = () => playSound(sounds.click);
   const playPlaceSound = () => playSound(sounds.place);
   const playWinSound = () => playSound(sounds.win);
